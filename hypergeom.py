@@ -63,7 +63,7 @@ class Point:
             return True
         matched_slope = slope(self, points[0])
         for i in range(1, len(points)):
-            if matched_slope == slope(points[i-1], points[i]):
+            if abs(matched_slope - slope(points[i-1], points[i])) > 0.0001:
                 return False
         return True
 
@@ -112,22 +112,27 @@ class Line:
     def midpoint(self):
         x1, y1 = self._point1.coords
         x2, y2 = self._point2.coords
-        return Point((x2 + x1) / 2, (y2 - y1) / 2)
+        return Point((x2 + x1) / 2, (y2 + y1) / 2)
 
     def as_svg(self):
         origin = Point(0, 0)
-        if origin.collinear(self.point1, self.point2):
+        print(self)
+        print(origin.collinear(self.point1, self.point2))
+        if origin.collinear(self._point1, self._point2):
             print('wa')
-            x1, y1 = self.point1.coords
-            x2, y2 = self.point2.coords
-            return dw.Line(x1, y1, x2, y2,
+            x1, y1 = self._point1.coords
+            mag1 = (x1**2 + y1**2)**0.5
+            x2, y2 = self._point2.coords
+            mag2 = (x2**2 + y2**2)**0.5
+            # normalize line to extend across entire plane
+            return dw.Line(x1/mag1, y1/mag1, x2/mag2, y2/mag2,
                            stroke='black',
                            stroke_width=0.01)
 
         a, b, r = self.corresponding_circle()
         return dw.Circle(a, b, r,
                          stroke='black',
-                         stroke_width='0.01',
+                         stroke_width=0.01,
                          fill='none',
                          clip_path='url(#unit_circle)')
 
@@ -164,6 +169,37 @@ class Line:
         return a, b, r
 
 
+class LineSegment(Line):
+    def __init__(self, point1, point2):
+        super().__init__(point1, point2)
+
+    def euclidian_length(self):
+        x1, y1 = self._point1.coords
+        x2, y2 = self._point2.coords
+        return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+
+    def as_svg(self):
+        origin = Point(0, 0)
+        x1, y1 = self._point1.coords
+        x2, y2 = self._point2.coords
+        if origin.collinear(self._point1, self._point2):
+            return dw.Line(x1, y1, x2, y2,
+                           stroke='black',
+                           stroke_width=0.01)
+
+        a, b, r = self.corresponding_circle()
+
+        midx, midy = self.midpoint().coords
+        radius = self.euclidian_length() / 2
+        clip = dw.ClipPath()
+        clip.append(dw.Circle(midx, midy, radius))
+        return dw.Circle(a, b, r,
+                         stroke='black',
+                         stroke_width=0.01,
+                         fill='none',
+                         clip_path=clip)
+
+
 class HyperbolicPlane:
     # TODO: complete  docstring
     """
@@ -179,7 +215,7 @@ class HyperbolicPlane:
         self._elements.remove(to_remove)
 
     def make_svg(self, filename, show_loi=True):
-        drawing = dw.Drawing(800, 800, viewBox='-1 -1 2 2')
+        drawing = dw.Drawing(800, 800, viewBox='-1.1 -1.1 2.2 2.2')
         if show_loi:
             drawing.append(dw.Circle(0, 0, 1,
                                      stroke='black',
@@ -196,6 +232,7 @@ class HyperbolicPlane:
             drawing.append(element.as_svg())
         drawing.append(dw.Line(0, 0, 1, 1))
         drawing.save_svg(filename)
+
 
 # Helper Geometric Functions
 def slope(point1: Point, point2: Point) -> float:
@@ -214,21 +251,24 @@ def slope(point1: Point, point2: Point) -> float:
 def main():
     plane = HyperbolicPlane()
 
+    o = Point(0, 0)
     point1 = Point(0.5, -0.5)
     point2 = Point(0.5, 0)
-    line = Line(point1, point2)
+    point3 = Point(-0.5, 0.5)
 
-    point12 = Point(0.5, -0.5)
-    point22 = Point(0, 0.5)
-    line2 = Line(point12, point22)
+    line1 = LineSegment(point1, point2)
+    line2 = LineSegment(point1, point3)
 
-    plane.add(line)
     plane.add(point1)
     plane.add(point2)
-
+    plane.add(point3)
+    plane.add(line1)
     plane.add(line2)
 
     plane.make_svg('drawings/test.svg')
+
+
+
 
 
 if __name__ == '__main__':
