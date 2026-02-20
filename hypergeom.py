@@ -1,3 +1,4 @@
+import math
 import drawsvg as dw
 import random as rd
 from abc import ABC, abstractmethod
@@ -34,7 +35,7 @@ class Point:
     def _valid_coords(self, x, y):
         # assumes point is in hyperbolic plane where K = 1
         # all points must be within radius-1 circle (non-inclusive)
-        return x**2 + y**2 < 1
+        return x**2 + y**2 <= 10
 
     @property
     def x(self):
@@ -57,6 +58,12 @@ class Point:
     def coords(self, new_x, new_y):
         self._x = new_x
         self._y = new_y
+
+    def euclidian_dist_to(self, point: Point):
+        x1, y1 = self.coords
+        x2, y2 = point.coords
+
+        return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
 
     def collinear(self, *points):
         if len(points) < 2:
@@ -116,10 +123,7 @@ class Line:
 
     def as_svg(self):
         origin = Point(0, 0)
-        print(self)
-        print(origin.collinear(self.point1, self.point2))
         if origin.collinear(self._point1, self._point2):
-            print('wa')
             x1, y1 = self._point1.coords
             mag1 = (x1**2 + y1**2)**0.5
             x2, y2 = self._point2.coords
@@ -157,9 +161,7 @@ class Line:
         c1 = float(x1 - x2)
         c2 = float(y1 - y2)
         c3 = (x1**2 + y1**2 - x2**2 - y2**2) / 2
-        
         c4 = (x1**2 + y1**2 + R**2) / 2
-
         c5 = c1*y1 - c2*x1
 
         a = (c3*y1 - c2*c4) / c5
@@ -168,15 +170,57 @@ class Line:
 
         return a, b, r
 
+    def ideal_points(self):
+        # Euclidian points where line intercepts the line at infinity
+        # Must intercept at two points
+        a, b, r = self.corresponding_circle()
+        if b == 0:
+            c1 = -(b / a)
+            c2 = (a**2 + b**2 - r**2 + 1) / (2*a)
+
+            y1 = (-2*c1*c2 + ((2*c1*c2)**2 - 4*(c1**2 + 1)*(c2**2 - 1))**0.5) / (2*(c1**2 + 1))
+            x1 = c1*y1 + c2
+
+            y2 = (-2*c1*c2 - ((2*c1*c2)**2 - 4*(c1**2 + 1)*(c2**2 - 1))**0.5) / (2*(c1**2 + 1))
+            x2 = c1*y2 + c2
+        else:
+            c1 = -(a / b)
+            c2 = (a**2 + b**2 - r**2 + 1) / (2*b)
+
+            x1 = (-2*c1*c2 + ((2*c1*c2)**2 - 4*(c1**2 + 1)*(c2**2 - 1))**0.5) / (2*(c1**2 + 1))
+            y1 = c1*x1 + c2
+
+            x2 = (-2*c1*c2 - ((2*c1*c2)**2 - 4*(c1**2 + 1)*(c2**2 - 1))**0.5) / (2*(c1**2 + 1))
+            y2 = c1*x2 + c2
+
+        return Point(x1, y1), Point(x2, y2)
+
+
 
 class LineSegment(Line):
     def __init__(self, point1, point2):
         super().__init__(point1, point2)
 
-    def euclidian_length(self):
-        x1, y1 = self._point1.coords
-        x2, y2 = self._point2.coords
-        return ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+    def length(self):
+        # formula found on Poincare disk model's Wiki page.
+        # Not sure how it works but it does! 
+        a, b = self.ideal_points()
+
+        if a.euclidian_dist_to(self._point1) > a.euclidian_dist_to(self._point2):
+            aq = a.euclidian_dist_to(self._point1)
+            ap = a.euclidian_dist_to(self._point2)
+        else:
+            aq = a.euclidian_dist_to(self._point2)
+            ap = a.euclidian_dist_to(self._point1)
+
+        if self._point1.euclidian_dist_to(b) > self._point2.euclidian_dist_to(b):
+            pb = self._point1.euclidian_dist_to(b)
+            qb = self._point2.euclidian_dist_to(b)
+        else:
+            pb = self._point2.euclidian_dist_to(b)
+            qb = self._point1.euclidian_dist_to(b)
+
+        return math.log((aq*pb) / (ap*qb))
 
     def as_svg(self):
         origin = Point(0, 0)
@@ -214,6 +258,9 @@ class HyperbolicPlane:
     def remove(self, to_remove: Element):
         self._elements.remove(to_remove)
 
+    def num_elements(self):
+        return _elements
+
     def make_svg(self, filename, show_loi=True):
         drawing = dw.Drawing(800, 800, viewBox='-1.1 -1.1 2.2 2.2')
         if show_loi:
@@ -228,11 +275,21 @@ class HyperbolicPlane:
         drawing.append_def(boundary)
 
         for element in self._elements:
-            print(f'Drawing {element}')
             drawing.append(element.as_svg())
         drawing.append(dw.Line(0, 0, 1, 1))
         drawing.save_svg(filename)
 
+# Helper Generator Functions
+def random_point():
+    x = rd.uniform(-1, 1)
+    y = rd.uniform(-(1 - x**2)**0.5, (1 - x**2)**0.5)
+    return Point(x, y)
+
+def random_line():
+    return Line(random_point(), random_point())
+
+def random_line_segment():
+    return LineSegment(random_point(), random_point())
 
 # Helper Geometric Functions
 def slope(point1: Point, point2: Point) -> float:
@@ -249,27 +306,20 @@ def slope(point1: Point, point2: Point) -> float:
 
 
 def main():
-    plane = HyperbolicPlane()
+    # plane = HyperbolicPlane()
+    #
+    # for _ in range(3):
+    #     plane.add(random_line())
+    #
+    # plane.make_svg('drawings/test.svg')
+    q = Point(0.6, -0.2)
+    p = Point(0.4, -0.4)
 
-    o = Point(0, 0)
-    point1 = Point(0.5, -0.5)
-    point2 = Point(0.5, 0)
-    point3 = Point(-0.5, 0.5)
+    line = LineSegment(q, p)
 
-    line1 = LineSegment(point1, point2)
-    line2 = LineSegment(point1, point3)
+    print(line.length())
 
-    plane.add(point1)
-    plane.add(point2)
-    plane.add(point3)
-    plane.add(line1)
-    plane.add(line2)
-
-    plane.make_svg('drawings/test.svg')
-
-
-
-
+    
 
 if __name__ == '__main__':
     main()
