@@ -7,8 +7,8 @@
 </clipPath>
 </defs>
 <circle cx="0" cy="0" r="1" stroke="black" stroke-width="0.01" stroke-dasharray="0.05, 0.05" fill="none" />
-<circle cx="1.5154487462671966" cy="2.3523815534355204" r="2.6134811794819814" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
-<circle cx="0.683758125843086" cy="-3.053302581443966" r="2.964824080533082" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
-<circle cx="1.4493087246499294" cy="0.5219975589212852" r="1.1717411108543498" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
+<circle cx="-0.39956650175083513" cy="1.7363271071624686" r="1.4746135807012584" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
+<circle cx="-21.557645826179865" cy="-35.24828434423683" r="41.305854824457775" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
+<circle cx="1.2207280230339355" cy="-0.6587137493773605" r="0.9612911680854666" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#unit_circle)" />
 <path d="M0,0 L1,1" />
 </svg>

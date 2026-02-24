@@ -1,4 +1,5 @@
 import math
+import numpy as np
 import drawsvg as dw
 import random as rd
 from abc import ABC, abstractmethod
@@ -13,29 +14,71 @@ class Element:
         pass
 
 
-class Point:
+class Point(Element):
     """
     A point in a hyperbolic plane which is defined by two coordinates. These coordinates must
     fall into the plane which is defined by a radius-K circle (not including edges).
 
+    blah, blah, complex operations
+
     Parameters:
         x, x coordinate (real number)
-        y, y coordinate (real number)
+        y, y coordinate (imaginary number)
     """
     def __init__(self, x, y):
-        if self._valid_coords(x, y):
-            self._x = x
-            self._y = y
-        else:
-            raise ValueError(f'Point must be within 1-radius circle (x^2 + y^2 < 1)')
+        self._x = x
+        self._y = y
 
     def __str__(self):
         return f'({self._x}, {self._y})'
 
-    def _valid_coords(self, x, y):
-        # assumes point is in hyperbolic plane where K = 1
-        # all points must be within radius-1 circle (non-inclusive)
-        return x**2 + y**2 <= 10
+    def __add__(self, to_add):
+        # treat both points as vectors and add
+        x1, y1 = self.coords
+        x2, y2 = num2point(to_add).coords
+        return Point(x1 + x2, y1 + y2)
+
+    def __radd__(self, to_add):
+        # communitive 
+        return self + to_add
+
+    def __sub__(self, to_subtract):
+        # treat both points as vectors and subtract
+        x1, y1 = self.coords
+        x2, y2 = num2point(to_subtract).coords
+        return Point(x1 - x2, y1 - y2)
+    
+    def __rsub__(self, to_subtract):
+        return -1*(self - to_subtract)
+
+    def __mul__(self, to_multiply):
+        x1, y1 = self.coords
+        x2, y2 = num2point(to_multiply).coords
+        # (x1 + i*y1) * (x2 + i*y2) = x1*x2 + i*x1*y2 + i*y1*x2 + i*i*y1*y2
+        # x + yi = (x1*x2 - y1*y2) + i*(x1*y2 + y1*x2)
+        return Point(x1*x2 - y1*y2, x1*y2 + y1*x2)
+
+    def __rmul__(self, to_multiply):
+        # Associative operation
+        return self * to_multiply
+
+    def __truediv__(self, denom):
+        x1, y1 = self.coords
+        denom = num2point(denom)
+        x2, y2 = denom.coords
+        if y2 == 0:
+            return Point(x1 / x2, y1 / x2)
+        # (x1 + i*y1) / (x2 + i*y2) = (x1 + i*y1) * (x2 - i*y2) / (x2^2 + y2^2)
+        return (self * denom.conjugate()) / Point((x2**2) + (y2**2), 0)
+
+    def __rtruediv__(self, numerator):
+        numerator = num2point(numerator)
+        x1, y1 = numerator.coords
+        x2, y2 = self.coords
+        if y2 == 0:
+            return Point(x1 / x2, y1 / x2)
+        # (x1 + i*y1) / (x2 + i*y2) = (x1 + i*y1) * (x2 - i*y2) / (x2^2 + y2^2)
+        return (self * numerator.conjugate()) / Point((x2**2) + (y2**2), 0)
 
     @property
     def x(self):
@@ -59,6 +102,9 @@ class Point:
         self._x = new_x
         self._y = new_y
 
+    def conjugate(self):
+        return Point(self._x, -1 * self._y)
+
     def euclidian_dist_to(self, point: Point):
         x1, y1 = self.coords
         x2, y2 = point.coords
@@ -75,13 +121,13 @@ class Point:
         return True
 
     def as_svg(self):
-        return dw.Circle(self.x, self.y, .03,
+        return dw.Circle(self.x, -1*self.y, .03,
                          stroke='black',
                          stroke_width=0.01,
                          fill='black')
 
 
-class Line:
+class Line(Element):
     """
     A line in the hypergeometric plane is defined the same as it is in the Euclidian plane:
         Passes through two points
@@ -175,6 +221,7 @@ class Line:
         # Must intercept at two points
         a, b, r = self.corresponding_circle()
         if b == 0:
+            is_linear
             c1 = -(b / a)
             c2 = (a**2 + b**2 - r**2 + 1) / (2*a)
 
@@ -234,7 +281,7 @@ class LineSegment(Line):
         a, b, r = self.corresponding_circle()
 
         midx, midy = self.midpoint().coords
-        radius = self.euclidian_length() / 2
+        radius = self._point1.euclidian_dist_to(self.midpoint())
         clip = dw.ClipPath()
         clip.append(dw.Circle(midx, midy, radius))
         return dw.Circle(a, b, r,
@@ -279,6 +326,18 @@ class HyperbolicPlane:
         drawing.append(dw.Line(0, 0, 1, 1))
         drawing.save_svg(filename)
 
+# Type conversion functions
+def num2point(input):
+    if isinstance(input, (float, int)):
+        return Point(input, 0)
+    elif isinstance(input, tuple):
+        # assumes tuple has length of 2
+        return Point(input[0], input[1])
+    elif isinstance(input, Point):
+        return input
+    else:
+        raise NotImplemented()
+
 # Helper Generator Functions
 def random_point():
     x = rd.uniform(-1, 1)
@@ -292,6 +351,11 @@ def random_line_segment():
     return LineSegment(random_point(), random_point())
 
 # Helper Geometric Functions
+def dot_product(point1: Point, point2: Point) -> float:
+    x1, y1 = point1.coords
+    x2, y2 = point2.coords
+    return x1*x2 + y1*y2
+
 def slope(point1: Point, point2: Point) -> float:
     x1, y1 = point1.coords
     x2, y2 = point2.coords
@@ -306,19 +370,18 @@ def slope(point1: Point, point2: Point) -> float:
 
 
 def main():
-    # plane = HyperbolicPlane()
-    #
-    # for _ in range(3):
-    #     plane.add(random_line())
-    #
-    # plane.make_svg('drawings/test.svg')
-    q = Point(0.6, -0.2)
-    p = Point(0.4, -0.4)
+    p1 = Point(5, 3)
+    p2 = (5, 3)
 
-    line = LineSegment(q, p)
-
-    print(line.length())
-
+    print(f'p1 + p2 = {p1 + p2}')
+    print(f'p1 - p2 = {p1 - p2}')
+    print(f'p1 * p2 = {p1 * p2}')
+    print(f'p1 / p2 = {p1 / p2}')
+    print()
+    print(f'p2 + p1 = {p2 + p1}')
+    print(f'p2 - p1 = {p2 - p1}')
+    print(f'p2 * p1 = {p2 * p1}')
+    print(f'p2 / p1 = {p2 / p1}')
     
 
 if __name__ == '__main__':

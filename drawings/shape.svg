@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800" height="800" viewBox="-1.1 -1.1 2.2 2.2">
+<defs>
+<clipPath id="unit_circle">
+<circle cx="0" cy="0" r="1" />
+</clipPath>
+<clipPath id="d0">
+<circle cx="-0.3877660567307044" cy="-0.061416109872145054" r="0.062181669407111104" />
+</clipPath>
+<clipPath id="d1">
+<circle cx="0.17823649287095028" cy="-0.34980881337292086" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d2">
+<circle cx="0.061416109872144936" cy="0.3877660567307044" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d3">
+<circle cx="-0.06141610987214498" cy="-0.3877660567307044" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d4">
+<circle cx="0.3877660567307044" cy="0.06141610987214505" r="0.062181669407111145" />
+</clipPath>
+<clipPath id="d5">
+<circle cx="-0.2776098461008788" cy="-0.27760984610087885" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d6">
+<circle cx="-0.2776098461008789" cy="0.2776098461008788" r="0.062181669407111145" />
+</clipPath>
+<clipPath id="d7">
+<circle cx="0.34980881337292086" cy="0.17823649287095034" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d8">
+<circle cx="0.06141610987214503" cy="-0.3877660567307044" r="0.062181669407111104" />
+</clipPath>
+<clipPath id="d9">
+<circle cx="-0.061416109872145075" cy="0.3877660567307044" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d10">
+<circle cx="0.17823649287095017" cy="0.3498088133729209" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d11">
+<circle cx="0.2776098461008788" cy="0.2776098461008789" r="0.06218166940711112" />
+</clipPath>
+<clipPath id="d12">
+<circle cx="0.3877660567307044" cy="-0.061416109872145005" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d13">
+<circle cx="-0.3498088133729209" cy="0.17823649287095022" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d14">
+<circle cx="-0.3877660567307044" cy="0.06141610987214496" r="0.062181669407111104" />
+</clipPath>
+<clipPath id="d15">
+<circle cx="-0.17823649287095022" cy="-0.34980881337292086" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d16">
+<circle cx="0.34980881337292086" cy="-0.17823649287095025" r="0.06218166940711111" />
+</clipPath>
+<clipPath id="d17">
+<circle cx="0.27760984610087885" cy="-0.27760984610087885" r="0.0621816694071111" />
+</clipPath>
+<clipPath id="d18">
+<circle cx="-0.34980881337292086" cy="-0.1782364928709503" r="0.062181669407111125" />
+</clipPath>
+<clipPath id="d19">
+<circle cx="-0.1782364928709503" cy="0.34980881337292086" r="0.062181669407111104" />
+</clipPath>
+</defs>
+<circle cx="0" cy="0" r="1" stroke="black" stroke-width="0.01" stroke-dasharray="0.05, 0.05" fill="none" />
+<g id="20-gon" fill="none" stroke="black">
+<circle cx="-1.4566291863916438" cy="-0.2307073984470252" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d0)" />
+<circle cx="0.6695389477481167" cy="-1.3140441726953174" r="1.0839716280171618" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d1)" />
+<circle cx="0.23070739844702515" cy="1.456629186391644" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d2)" />
+<circle cx="-0.23070739844702515" cy="-1.456629186391644" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d3)" />
+<circle cx="1.456629186391644" cy="0.23070739844702506" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d4)" />
+<circle cx="-1.0428313598914678" cy="-1.0428313598914685" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d5)" />
+<circle cx="-1.0428313598914682" cy="1.0428313598914678" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d6)" />
+<circle cx="1.3140441726953174" cy="0.6695389477481167" r="1.0839716280171618" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d7)" />
+<circle cx="0.2307073984470252" cy="-1.4566291863916438" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d8)" />
+<circle cx="-0.2307073984470252" cy="1.4566291863916438" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d9)" />
+<circle cx="0.669538947748116" cy="1.3140441726953176" r="1.0839716280171616" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d10)" />
+<circle cx="1.0428313598914676" cy="1.0428313598914687" r="1.0839716280171625" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d11)" />
+<circle cx="1.456629186391644" cy="-0.23070739844702515" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d12)" />
+<circle cx="-1.314044172695318" cy="0.6695389477481162" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d13)" />
+<circle cx="-1.4566291863916438" cy="0.2307073984470251" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d14)" />
+<circle cx="-0.6695389477481166" cy="-1.3140441726953178" r="1.0839716280171623" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d15)" />
+<circle cx="1.3140441726953176" cy="-0.6695389477481165" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d16)" />
+<circle cx="1.0428313598914678" cy="-1.0428313598914678" r="1.0839716280171616" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d17)" />
+<circle cx="-1.3140441726953176" cy="-0.6695389477481167" r="1.083971628017162" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d18)" />
+<circle cx="-0.6695389477481168" cy="1.3140441726953178" r="1.0839716280171625" stroke="black" stroke-width="0.01" fill="none" clip-path="url(#d19)" />
+</g>
+<path d="M0,0 L1,1" />
+</svg>
